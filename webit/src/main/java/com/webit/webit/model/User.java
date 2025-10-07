@@ -14,7 +14,8 @@ import java.util.UUID;
 @Document(collection = "user")
 public class User extends AbstractClass {
     @Id
-    private UUID userId;
+    @Builder.Default
+    private String userId = UUID.randomUUID().toString();
 
     private String name;
 

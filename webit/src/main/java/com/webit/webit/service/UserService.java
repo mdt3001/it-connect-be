@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface UserService {
     UserResponse savedUser(UserDTORequest userDTO);
+
+    void deleteUser(String userId);
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 @Builder
 public class UserResponse {
 
-    private UUID userId;
+    private String userId;
 
     private String name;
 

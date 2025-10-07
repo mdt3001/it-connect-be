@@ -2,12 +2,16 @@ package com.webit.webit.service.impl;
 
 import com.webit.webit.dto.request.UserDTORequest;
 import com.webit.webit.dto.response.UserResponse;
+import com.webit.webit.exception.AppException;
+import com.webit.webit.exception.ErrorCode;
 import com.webit.webit.mapper.UserMapper;
 import com.webit.webit.model.User;
 import com.webit.webit.repository.UserRepository;
 import com.webit.webit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -15,7 +19,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
@@ -23,11 +27,17 @@ public class ServiceImpl implements UserService {
     @Override
     public UserResponse savedUser(UserDTORequest userDTO) {
 
-        User user = userMapper.toEntity(userDTO);
+       if (userRepository.existsByEmail(userDTO.getEmail())) {
+           throw new AppException(ErrorCode.USER_EXISTED);
+       }
 
-        user.setUserId(UUID.randomUUID());
+       User user = userMapper.toEntity(userDTO);
 
-        userRepository.save(user);
+       // hash password khi tạo
+       PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
+       user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+       userRepository.save(user);
 
         return UserResponse.builder()
                 .userId(user.getUserId())
@@ -35,4 +45,10 @@ public class ServiceImpl implements UserService {
                 .email(user.getEmail())
                 .build();
     }
+
+    @Override
+    public void deleteUser(String userId) {
+        userRepository.deleteById(userId);
+    }
+
 }
