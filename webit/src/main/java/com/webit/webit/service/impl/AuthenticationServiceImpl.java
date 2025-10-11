@@ -2,9 +2,13 @@ package com.webit.webit.service.impl;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.webit.webit.dto.request.AuthenticationRequest;
+import com.webit.webit.dto.request.IntrospectRequest;
 import com.webit.webit.dto.response.AuthenticationResponse;
+import com.webit.webit.dto.response.IntrospectResponse;
 import com.webit.webit.exception.AppException;
 import com.webit.webit.exception.ErrorCode;
 import com.webit.webit.repository.UserRepository;
@@ -12,10 +16,12 @@ import com.webit.webit.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -29,7 +35,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
 
     @NonFinal
-    protected static final String SIGNER_KEY = "V6V2MWJnD/rENjn5W5ufbhSSo6OFZT8ts1TSBHtuBzD2W4KZZdueW8Nx1DJUmW0m";
+    @Value("${jwt.signerKey}")
+    protected String SIGNER_KEY;
 
 
     @Override
@@ -52,6 +59,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(token)
                 .authenticated(true)
+                .build();
+    }
+
+    @Override
+    public IntrospectResponse introspect(IntrospectRequest introspectRequest) throws JOSEException, ParseException {
+
+        var token = introspectRequest.getToken();
+
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        var verified = signedJWT.verify(verifier);
+
+        return IntrospectResponse.builder()
+                .valid(verified && expiryTime.after(new Date()))
                 .build();
     }
 

@@ -4,6 +4,7 @@ package com.webit.webit.controller;
 import com.webit.webit.dto.request.UserDTORequest;
 import com.webit.webit.dto.response.ApiResponse;
 
+import com.webit.webit.dto.response.UserDetailResponse;
 import com.webit.webit.dto.response.UserResponse;
 import com.webit.webit.service.UserService;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
+
     private final UserService userService;
 
     @PostMapping
@@ -32,6 +34,14 @@ public class UserController {
     public ApiResponse<String> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return ApiResponse.<String>builder().result("User has been deleted").build();
+    }
+
+    @GetMapping("{userId}")
+    public ApiResponse<UserDetailResponse> getUser(@PathVariable String userId) {
+        return ApiResponse.<UserDetailResponse>builder()
+                .message("Get User")
+                .result(userService.getUser(userId))
+                .build();
     }
 
 }
