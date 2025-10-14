@@ -7,10 +7,14 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.webit.webit.dto.request.AuthenticationRequest;
 import com.webit.webit.dto.request.IntrospectRequest;
+import com.webit.webit.dto.request.UserDTORequest;
 import com.webit.webit.dto.response.AuthenticationResponse;
 import com.webit.webit.dto.response.IntrospectResponse;
+import com.webit.webit.dto.response.UserResponse;
 import com.webit.webit.exception.AppException;
 import com.webit.webit.exception.ErrorCode;
+import com.webit.webit.mapper.UserMapper;
+import com.webit.webit.model.User;
 import com.webit.webit.repository.UserRepository;
 import com.webit.webit.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +38,42 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
 
+    private final UserMapper userMapper;
+
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
+
+    @Override
+    public UserResponse register(UserDTORequest userDTO) {
+
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+        User user = userMapper.toEntity(userDTO);
+
+        // hash password khi tạo
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+
+        userRepository.save(user);
+
+        var token = generateToken(user.getEmail());
+
+        return UserResponse.builder()
+                .userId(user.getUserId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .avatar(user.getAvatar())
+                .role(user.getRole())
+                .token(token)
+                .companyName(user.getCompanyName())
+                .companyLogo(user.getCompanyLogo())
+                .companyDescription(user.getCompanyDescription())
+                .resume(user.getResume())
+                .build();
+    }
 
 
     @Override
@@ -79,6 +116,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .valid(verified && expiryTime.after(new Date()))
                 .build();
     }
+
+
 
     private String generateToken(String email) {
 

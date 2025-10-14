@@ -22,13 +22,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserDTORequest userDTO) {
-        return ApiResponse.<UserResponse>builder()
-                .message("Ok")
-                .result(userService.savedUser(userDTO))
-                .build();
-    }
 
     @DeleteMapping("/{userId}")
     public ApiResponse<String> deleteUser(@PathVariable String userId) {
@@ -43,5 +36,4 @@ public class UserController {
                 .result(userService.getUser(userId))
                 .build();
     }
-
 }

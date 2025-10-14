@@ -7,7 +7,6 @@ import com.webit.webit.dto.response.UserResponse;
 import java.util.UUID;
 
 public interface UserService {
-    UserResponse savedUser(UserDTORequest userDTO);
 
     void deleteUser(String userId);
 

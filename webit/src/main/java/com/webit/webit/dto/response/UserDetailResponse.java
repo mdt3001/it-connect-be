@@ -17,6 +17,8 @@ public class UserDetailResponse {
 
     private String email;
 
+
+
     private String avatar;
 
     private String resume;
@@ -26,5 +28,4 @@ public class UserDetailResponse {
     private String companyDescription;
 
     private String companyLogo;
-
 }

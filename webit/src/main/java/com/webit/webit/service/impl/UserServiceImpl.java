@@ -24,29 +24,8 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+
     private final UserRepository userRepository;
-
-    @Override
-    public UserResponse savedUser(UserDTORequest userDTO) {
-
-       if (userRepository.existsByEmail(userDTO.getEmail())) {
-           throw new AppException(ErrorCode.USER_EXISTED);
-       }
-
-       User user = userMapper.toEntity(userDTO);
-
-       // hash password khi tạo
-       PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
-       user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-
-       userRepository.save(user);
-
-        return UserResponse.builder()
-                .userId(user.getUserId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .build();
-    }
 
     @Override
     public void deleteUser(String userId) {
