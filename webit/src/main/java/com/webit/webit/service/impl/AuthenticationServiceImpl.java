@@ -9,6 +9,7 @@ import com.webit.webit.dto.request.AuthenticationRequest;
 import com.webit.webit.dto.request.IntrospectRequest;
 import com.webit.webit.dto.request.UserDTORequest;
 import com.webit.webit.dto.response.AuthenticationResponse;
+import com.webit.webit.dto.response.ImageResponse;
 import com.webit.webit.dto.response.IntrospectResponse;
 import com.webit.webit.dto.response.UserResponse;
 import com.webit.webit.exception.AppException;
@@ -24,7 +25,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -73,6 +81,36 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .companyDescription(user.getCompanyDescription())
                 .resume(user.getResume())
                 .build();
+    }
+
+    @Override
+    public ImageResponse uploadImage(MultipartFile file) {
+        try {
+            // 📁 Thư mục lưu file
+            String uploadDir = "uploads/";
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            // 📄 Tên file duy nhất
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir, fileName);
+
+            // 💾 Lưu file
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // 🌐 Tạo URL truy cập file (localhost có thể thay bằng domain thật)
+            String imageUrl = "http://localhost:9090/uploads/" + fileName;
+
+            // ✅ Trả response
+            return ImageResponse.builder()
+                    .imageUrl(imageUrl)
+                    .build();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to upload file: " + e.getMessage());
+        }
     }
 
 

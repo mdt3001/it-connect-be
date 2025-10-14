@@ -6,16 +6,14 @@ import com.webit.webit.dto.request.AuthenticationRequest;
 import com.webit.webit.dto.request.IntrospectRequest;
 import com.webit.webit.dto.request.UserDTORequest;
 import com.webit.webit.dto.response.ApiResponse;
-import com.webit.webit.dto.response.AuthenticationResponse;
+import com.webit.webit.dto.response.ImageResponse;
 import com.webit.webit.dto.response.IntrospectResponse;
 import com.webit.webit.dto.response.UserResponse;
 import com.webit.webit.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 
@@ -47,6 +45,14 @@ public class AuthenticationController {
         var result = authenticationService.introspect(introspectRequest);
         return ApiResponse.<IntrospectResponse>builder()
                 .result(result)
+                .build();
+    }
+
+    @PostMapping("/upload-image")
+    public ApiResponse<ImageResponse> uploadImage(@RequestParam MultipartFile file) {
+        var response = authenticationService.uploadImage(file);
+        return ApiResponse.<ImageResponse>builder()
+                .result(response)
                 .build();
     }
 
