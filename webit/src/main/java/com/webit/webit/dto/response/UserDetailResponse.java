@@ -17,8 +17,6 @@ public class UserDetailResponse {
 
     private String email;
 
-
-
     private String avatar;
 
     private String resume;

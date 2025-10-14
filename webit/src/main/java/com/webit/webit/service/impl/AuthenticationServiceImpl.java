@@ -77,7 +77,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
+    public UserResponse authenticate(AuthenticationRequest authenticationRequest) {
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
@@ -93,10 +93,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var token = generateToken(authenticationRequest.getEmail());
 
 
-        return AuthenticationResponse.builder()
+        return UserResponse.builder()
+                .userId(user.getUserId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .avatar(user.getAvatar())
+                .role(user.getRole())
                 .token(token)
-                .authenticated(true)
+                .companyName(user.getCompanyName())
+                .companyLogo(user.getCompanyLogo())
+                .companyDescription(user.getCompanyDescription())
+                .resume(user.getResume())
                 .build();
+
     }
 
     @Override
@@ -116,7 +125,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .valid(verified && expiryTime.after(new Date()))
                 .build();
     }
-
 
 
     private String generateToken(String email) {
