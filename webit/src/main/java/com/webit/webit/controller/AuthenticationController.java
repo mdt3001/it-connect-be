@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
