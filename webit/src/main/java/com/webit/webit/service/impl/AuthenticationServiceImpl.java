@@ -86,24 +86,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public ImageResponse uploadImage(MultipartFile file) {
         try {
-            // 📁 Thư mục lưu file
+            //  Thư mục lưu file
             String uploadDir = "uploads/";
             File directory = new File(uploadDir);
             if (!directory.exists()) {
                 directory.mkdirs();
             }
 
-            // 📄 Tên file duy nhất
+            //  Tên file duy nhất
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             Path filePath = Paths.get(uploadDir, fileName);
 
-            // 💾 Lưu file
+            //  Lưu file
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            // 🌐 Tạo URL truy cập file (localhost có thể thay bằng domain thật)
+            //  Tạo URL truy cập file (localhost có thể thay bằng domain thật)
             String imageUrl = "http://localhost:9090/uploads/" + fileName;
 
-            // ✅ Trả response
+            //  Trả response
             return ImageResponse.builder()
                     .imageUrl(imageUrl)
                     .build();
@@ -129,7 +129,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         var token = generateToken(authenticationRequest.getEmail());
-
 
         return UserResponse.builder()
                 .userId(user.getUserId())
@@ -159,8 +158,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         var verified = signedJWT.verify(verifier);
 
+        boolean valid = verified && expiryTime.after(new Date());
+
         return IntrospectResponse.builder()
-                .valid(verified && expiryTime.after(new Date()))
+                .valid(valid)
                 .build();
     }
 

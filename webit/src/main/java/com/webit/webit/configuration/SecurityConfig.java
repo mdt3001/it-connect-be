@@ -35,20 +35,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // ✅ Cách mới thay cho .cors().and()
+                //  Cách mới thay cho .cors().and()
                 .cors(Customizer.withDefaults())
 
-                // ✅ Tắt CSRF vì là REST API
+                // Tắt CSRF vì là REST API
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // ✅ Cho phép OPTIONS (preflight request)
+                //  Cho phép OPTIONS (preflight request)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
-                // ✅ Cấu hình OAuth2 Resource Server (JWT)
+                //  Cấu hình OAuth2 Resource Server (JWT)
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder()))
                 );
@@ -64,7 +65,7 @@ public class SecurityConfig {
                 .build();
     }
 
-    // ✅ Cấu hình CORS theo chuẩn mới
+    //  Cấu hình CORS theo chuẩn mới
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

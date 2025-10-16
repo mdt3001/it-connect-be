@@ -2,6 +2,7 @@ package com.webit.webit.controller;
 
 
 import com.webit.webit.dto.request.UserDTORequest;
+import com.webit.webit.dto.request.UserUpdateRequest;
 import com.webit.webit.dto.response.ApiResponse;
 
 import com.webit.webit.dto.response.UserDetailResponse;
@@ -36,4 +37,13 @@ public class UserController {
                 .result(userService.getUser(userId))
                 .build();
     }
+
+    @PutMapping("{userId}")
+    public ApiResponse<UserDetailResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest userUpdateRequest) {
+        return ApiResponse.<UserDetailResponse>builder()
+                .result(userService.updateUser(userId, userUpdateRequest))
+                .build();
+    }
+
+
 }

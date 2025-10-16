@@ -1,26 +1,22 @@
-package com.webit.webit.dto.response;
+package com.webit.webit.dto.request;
 
-import com.webit.webit.util.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class UserDetailResponse {
-
-    private String userId;
+public class UserUpdateRequest {
 
     private String name;
 
     private String avatar;
 
     private String resume;
-
-    private Role role;
 
     private String companyName;
 

@@ -1,6 +1,7 @@
 package com.webit.webit.mapper;
 
 import com.webit.webit.dto.request.UserDTORequest;
+import com.webit.webit.dto.request.UserUpdateRequest;
 import com.webit.webit.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -38,4 +39,17 @@ public class UserMapper {
                 .companyLogo(userDTO.getCompanyLogo())
                 .build();
     }
+
+    public User toEntity(final UserUpdateRequest userUpdateRequest) {
+
+        return User.builder()
+                .name(userUpdateRequest.getName())
+                .resume(userUpdateRequest.getResume())
+                .avatar(userUpdateRequest.getAvatar())
+                .companyDescription(userUpdateRequest.getCompanyDescription())
+                .companyName(userUpdateRequest.getCompanyName())
+                .companyLogo(userUpdateRequest.getCompanyLogo())
+                .build();
+    }
+
 }
