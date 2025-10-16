@@ -67,7 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         userRepository.save(user);
 
-        var token = generateToken(user.getEmail());
+        var token = generateToken(user.getUserId());
 
         return UserResponse.builder()
                 .userId(user.getUserId())
@@ -128,7 +128,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
-        var token = generateToken(authenticationRequest.getEmail());
+        var token = generateToken(user.getUserId());
 
         return UserResponse.builder()
                 .userId(user.getUserId())
@@ -166,12 +166,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
 
-    private String generateToken(String email) {
+    private String generateToken(String userId) {
 
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(email)
+                .subject(userId)
                 .issuer("ducki")
                 .issueTime(new Date())
                 .expirationTime(new Date(

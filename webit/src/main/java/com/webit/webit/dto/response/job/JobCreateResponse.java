@@ -1,23 +1,23 @@
-package com.webit.webit.model;
+package com.webit.webit.dto.response.job;
 
+
+import com.webit.webit.model.User;
 import com.webit.webit.util.Type;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.annotation.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@Document(collection = "job")
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class Job extends AbstractClass {
-    @Id
-    @Builder.Default
+public class JobCreateResponse {
+
     private String jobId = UUID.randomUUID().toString();
 
     private String title;
@@ -30,8 +30,9 @@ public class Job extends AbstractClass {
 
     private Type type;
 
-    @DBRef
-    private User company;
+    private String companyName;
+
+    private String userId;
 
     private BigDecimal salaryMin;
 
