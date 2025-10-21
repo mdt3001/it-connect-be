@@ -46,7 +46,6 @@ public class JobServiceImpl implements JobService {
 
         var user = userRepository.findByUserId(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-
         Job job = Job.builder()
                 .title(jobCreateRequest.getTitle())
                 .description(jobCreateRequest.getDescription())

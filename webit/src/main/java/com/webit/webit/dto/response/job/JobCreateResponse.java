@@ -18,7 +18,7 @@ import java.util.UUID;
 @Builder
 public class JobCreateResponse {
 
-    private String jobId = UUID.randomUUID().toString();
+    private String jobId;
 
     private String title;
 

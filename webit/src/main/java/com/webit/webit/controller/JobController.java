@@ -43,7 +43,7 @@ public class JobController {
                 .build();
     }
 
-    @GetMapping
+    @GetMapping("/getJobStatus")
     public ApiResponse<PageResponse<?>> getAllJobsStatus(@RequestParam int pageNo,
                                                    @RequestParam int pageSize,
                                                    @RequestParam(required = false) String keyword,
