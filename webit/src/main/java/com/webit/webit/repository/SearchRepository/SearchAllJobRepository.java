@@ -2,6 +2,7 @@ package com.webit.webit.repository.SearchRepository;
 
 
 import com.webit.webit.dto.response.PageResponse;
+import com.webit.webit.dto.response.job.JobCreateResponse;
 import com.webit.webit.model.Job;
 import com.webit.webit.util.Type;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -85,11 +87,28 @@ public class SearchAllJobRepository {
 
         Page<?> page = new PageImpl<Object>(jobs, pageable, totalElements);
 
+        List<Job> tempJobs = (List<Job>) page.stream().toList();
+
+        List<JobCreateResponse> response = new ArrayList<JobCreateResponse>();
+
+        tempJobs.forEach(tempJob -> response.add(JobCreateResponse.builder()
+                        .jobId(tempJob.getJobId())
+                        .title(tempJob.getTitle())
+                        .description(tempJob.getDescription())
+                        .location(tempJob.getLocation())
+                        .category(tempJob.getCategory())
+                        .type(tempJob.getType())
+                        .companyName(tempJob.getCompany().getName())
+                        .userId(tempJob.getCompany().getUserId())
+                        .salaryMin(tempJob.getSalaryMin())
+                        .salaryMax(tempJob.getSalaryMax())
+                .build()));
+
         return PageResponse.builder()
                 .pageNo(pageNo)
                 .pageSize(pageSize)
                 .totalPage(page.getTotalPages())
-                .items(page.stream().toList())
+                .items(response)
                 .build();
     }
 }

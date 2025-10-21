@@ -1,6 +1,7 @@
 package com.webit.webit.model;
 
 
+import com.webit.webit.util.Status;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
@@ -9,14 +10,18 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Document(collection = "saved_job")
-public class SavedJob extends AbstractClass{
+@Document(collection = "application")
+public class Application extends AbstractClass{
     @Id
-    private String savedJobId;
+    private String applicationId;
 
     @DBRef
-    private User jobseeker;
+    private Job job;
 
     @DBRef
-    private User job;
+    private User applicant;
+
+    private String resume;
+
+    private Status status;
 }

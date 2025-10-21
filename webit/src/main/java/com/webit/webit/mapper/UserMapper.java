@@ -40,16 +40,5 @@ public class UserMapper {
                 .build();
     }
 
-    public User toEntity(final UserUpdateRequest userUpdateRequest) {
-
-        return User.builder()
-                .name(userUpdateRequest.getName())
-                .resume(userUpdateRequest.getResume())
-                .avatar(userUpdateRequest.getAvatar())
-                .companyDescription(userUpdateRequest.getCompanyDescription())
-                .companyName(userUpdateRequest.getCompanyName())
-                .companyLogo(userUpdateRequest.getCompanyLogo())
-                .build();
-    }
 
 }

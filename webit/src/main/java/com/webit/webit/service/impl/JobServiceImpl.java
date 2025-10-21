@@ -79,4 +79,9 @@ public class JobServiceImpl implements JobService {
 
         return searchAllJobRepository.getAllJobs(pageNo, pageSize, keyword, location, category, type, minSalary, maxSalary);
     }
+
+    @Override
+    public PageResponse<?> getAllJobsStatus(int pageNo, int pageSize, String keyword, String location, String category, Type type, BigDecimal minSalary, BigDecimal maxSalary) {
+        return null;
+    }
 }

@@ -28,7 +28,7 @@ public class JobController {
                 .build();
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ApiResponse<PageResponse<?>> getAllJobs(@RequestParam int pageNo,
                                    @RequestParam int pageSize,
                                    @RequestParam(required = false) String keyword,
@@ -39,7 +39,22 @@ public class JobController {
                                    @RequestParam(required = false) BigDecimal maxSalary,
                                    @RequestParam(required = false) String userId) {
         return ApiResponse.<PageResponse<?>>builder()
-                .result(jobService.getAllJobs(pageNo, pageSize, keyword,location, category, type, minSalary, maxSalary))
+                .result(jobService.getAllJobs(pageNo, pageSize, keyword, location, category, type, minSalary, maxSalary))
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<PageResponse<?>> getAllJobsStatus(@RequestParam int pageNo,
+                                                   @RequestParam int pageSize,
+                                                   @RequestParam(required = false) String keyword,
+                                                   @RequestParam(required = false) String location,
+                                                   @RequestParam(required = false) String category,
+                                                   @RequestParam(required = false) Type type,
+                                                   @RequestParam(required = false) BigDecimal minSalary,
+                                                   @RequestParam(required = false) BigDecimal maxSalary,
+                                                   @RequestParam(required = false) String userId) {
+        return ApiResponse.<PageResponse<?>>builder()
+                .result(jobService.getAllJobsStatus(pageNo, pageSize, keyword, location, category, type, minSalary, maxSalary))
                 .build();
     }
 

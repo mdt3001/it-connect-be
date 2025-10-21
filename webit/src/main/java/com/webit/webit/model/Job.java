@@ -17,8 +17,7 @@ import java.util.UUID;
 @Builder
 public class Job extends AbstractClass {
     @Id
-    @Builder.Default
-    private String jobId = UUID.randomUUID().toString();
+    private String jobId;
 
     private String title;
 

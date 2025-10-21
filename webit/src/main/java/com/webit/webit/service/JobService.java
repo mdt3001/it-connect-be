@@ -16,4 +16,6 @@ public interface JobService {
     JobCreateResponse createJob(JobCreateRequest jobCreateRequest);
 
     PageResponse<?> getAllJobs(int pageNo, int pageSize, String keyword, String location, String category, Type type, BigDecimal minSalary, BigDecimal maxSalary);
+
+    PageResponse<?> getAllJobsStatus(int pageNo, int pageSize, String keyword, String location, String category, Type type, BigDecimal minSalary, BigDecimal maxSalary);
 }

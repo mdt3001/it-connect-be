@@ -109,7 +109,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .build();
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload file: " + e.getMessage());
+            throw new RuntimeException("Tải ảnh thất bại: " + e.getMessage());
         }
     }
 
