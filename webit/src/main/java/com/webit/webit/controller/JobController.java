@@ -5,7 +5,9 @@ import com.webit.webit.dto.request.job.JobCreateRequest;
 import com.webit.webit.dto.response.ApiResponse;
 import com.webit.webit.dto.response.PageResponse;
 import com.webit.webit.dto.response.job.JobCreateResponse;
+import com.webit.webit.service.ApplicationService;
 import com.webit.webit.service.JobService;
+import com.webit.webit.service.SavedJobService;
 import com.webit.webit.util.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,10 @@ import java.util.List;
 public class JobController {
 
     private final JobService jobService;
+
+    private final SavedJobService savedJobService;
+
+    private final ApplicationService applicationService;
 
     @PostMapping("/")
     public ApiResponse<JobCreateResponse> createJob(@RequestBody JobCreateRequest jobCreateRequest) {
@@ -58,6 +64,21 @@ public class JobController {
                 .build();
     }
 
+    @PostMapping("/save-job")
+    public ApiResponse<String> saveJob(@RequestParam String jobId) {
+        savedJobService.saveJob(jobId);
 
+        return ApiResponse.<String>builder()
+                .result("Đã lưu")
+                .build();
+    }
 
+    @PostMapping("/apply-job")
+    public ApiResponse<String> applyJob(@RequestParam String jobId) {
+        applicationService.createApplication(jobId);
+
+        return ApiResponse.<String>builder()
+                .result("Đã nộp đơn")
+                .build();
+    }
 }

@@ -15,9 +15,9 @@ public abstract class AbstractClass {
 
     @CreatedDate
     @Field("createdAt")
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Field("updatedAt")
-    private OffsetDateTime updatedAt;
+    private LocalDateTime updatedAt;
 }

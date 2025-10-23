@@ -5,6 +5,7 @@ import com.webit.webit.dto.response.PageResponse;
 import com.webit.webit.dto.response.job.JobCreateResponse;
 import com.webit.webit.model.Job;
 import com.webit.webit.util.Type;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Getter
 public class SearchAllJobRepository {
 
     private final MongoTemplate mongoTemplate;
