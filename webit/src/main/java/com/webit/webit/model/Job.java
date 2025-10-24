@@ -1,9 +1,7 @@
 package com.webit.webit.model;
 
 import com.webit.webit.util.Type;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -15,6 +13,8 @@ import java.util.UUID;
 @Data
 @Document(collection = "job")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Job extends AbstractClass {
     @Id
     private String jobId;
@@ -36,6 +36,5 @@ public class Job extends AbstractClass {
 
     private BigDecimal salaryMax;
 
-    private boolean isClose = false;
-
+    private boolean isClosed = false;
 }

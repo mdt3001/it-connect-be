@@ -257,4 +257,13 @@ public class JobServiceImpl implements JobService {
                 .totalPage(page.getTotalPages())
                 .build();
     }
+
+    @Override
+    public void toogleClose(String jobId) {
+        var job = jobRepository.findByJobId(jobId).orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_EXISTED));
+
+        job.setClosed(true);
+
+        jobRepository.save(job);
+    }
 }

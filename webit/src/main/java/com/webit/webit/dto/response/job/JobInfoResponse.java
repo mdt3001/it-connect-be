@@ -35,4 +35,6 @@ public class JobInfoResponse {
 
     private BigDecimal salaryMax;
 
+    private boolean isClosed;
+
 }

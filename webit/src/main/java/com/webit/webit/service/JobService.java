@@ -24,4 +24,6 @@ public interface JobService {
     JobInfoResponse updateJob(String jobId, JobInfoRequest jobInfoRequest);
 
     PageResponse<?> getJobsEmployer(int pageNo, int pageSize);
+
+    void toogleClose(String jobId);
 }

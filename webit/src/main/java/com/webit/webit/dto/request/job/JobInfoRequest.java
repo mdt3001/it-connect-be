@@ -29,4 +29,6 @@ public class JobInfoRequest {
 
     private BigDecimal salaryMax;
 
+
+
 }

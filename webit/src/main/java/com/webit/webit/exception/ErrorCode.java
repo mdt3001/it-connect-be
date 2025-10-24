@@ -10,6 +10,7 @@ public enum ErrorCode {
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
     USER_EXISTED(1002, "Người dùng đã tồn tại", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "Người dùng không tồn tại", HttpStatus.NOT_FOUND),
+    JOB_NOT_EXISTED(1005, "Việc làm không tồn tại", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(1006, "Mật khẩu không đúng", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),

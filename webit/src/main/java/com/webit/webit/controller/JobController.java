@@ -23,11 +23,10 @@ import java.math.BigDecimal;
 public class JobController {
 
     private final JobService jobService;
+
     private final JobRepository jobRepository;
 
     private final SavedJobService savedJobService;
-
-    private final ApplicationService applicationService;
 
     @PostMapping("/")
     public ApiResponse<JobInfoResponse> createJob(@RequestBody JobInfoRequest jobInfoRequest) {
@@ -70,7 +69,6 @@ public class JobController {
     @GetMapping("/{jobId}")
     public ApiResponse<JobInfoResponse> getJob(@PathVariable String jobId) {
         return ApiResponse.<JobInfoResponse>builder()
-                .message("Get Job")
                 .result(jobService.getJob(jobId))
                 .build();
     }
@@ -78,7 +76,7 @@ public class JobController {
     @DeleteMapping("/{jobId}")
     public ApiResponse<String> deleteJob(@PathVariable String jobId) {
         jobRepository.deleteById(jobId);
-        return ApiResponse.<String>builder().result("Job has been deleted").build();
+        return ApiResponse.<String>builder().result("Công việc đã xóa").build();
     }
 
     @PutMapping("/{jobId}")
@@ -96,15 +94,6 @@ public class JobController {
                 .build();
     }
 
-    @PostMapping("/apply-job")
-    public ApiResponse<String> applyJob(@RequestParam String jobId) {
-        applicationService.createApplication(jobId);
-
-        return ApiResponse.<String>builder()
-                .result("Đã nộp đơn")
-                .build();
-    }
-
     @GetMapping("get-jobs-employer")
     public ApiResponse<PageResponse<?>> getJobsEmployer(@RequestParam int pageNo,
                                                         @RequestParam int pageSize
@@ -113,4 +102,14 @@ public class JobController {
                 .result(jobService.getJobsEmployer(pageNo, pageSize))
                 .build();
     }
+
+    @PatchMapping("/{jobId}/toogle-close")
+    public ApiResponse<String> toogleClose(@PathVariable String jobId) {
+        jobService.toogleClose(jobId);
+
+        return ApiResponse.<String>builder()
+                .message("Đã đóng việc")
+                .build();
+    }
+
 }

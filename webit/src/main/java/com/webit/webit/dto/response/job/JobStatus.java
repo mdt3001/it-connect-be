@@ -38,6 +38,8 @@ public class JobStatus {
 
     private boolean isApplied;
 
+    private boolean isClosed;
+
 }
 
 

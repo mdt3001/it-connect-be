@@ -1,5 +1,7 @@
 package com.webit.webit.service;
 
+import com.webit.webit.dto.response.application.ApplicationResponse;
+
 public interface ApplicationService {
-    void createApplication(String jobId);
+    ApplicationResponse createApplication(String jobId);
 }
