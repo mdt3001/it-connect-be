@@ -1,9 +1,9 @@
 package com.webit.webit.service.impl;
 
 
-import com.webit.webit.dto.request.job.JobCreateRequest;
+import com.webit.webit.dto.request.job.JobInfoRequest;
 import com.webit.webit.dto.response.PageResponse;
-import com.webit.webit.dto.response.job.JobCreateResponse;
+import com.webit.webit.dto.response.job.JobInfoResponse;
 import com.webit.webit.exception.AppException;
 import com.webit.webit.exception.ErrorCode;
 import com.webit.webit.model.Job;
@@ -19,7 +19,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -34,7 +33,7 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
-    public JobCreateResponse createJob(JobCreateRequest jobCreateRequest) {
+    public JobInfoResponse createJob(JobInfoRequest jobInfoRequest) {
 
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -47,19 +46,19 @@ public class JobServiceImpl implements JobService {
         var user = userRepository.findByUserId(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Job job = Job.builder()
-                .title(jobCreateRequest.getTitle())
-                .description(jobCreateRequest.getDescription())
-                .location(jobCreateRequest.getLocation())
+                .title(jobInfoRequest.getTitle())
+                .description(jobInfoRequest.getDescription())
+                .location(jobInfoRequest.getLocation())
                 .company(user)
-                .category(jobCreateRequest.getCategory())
-                .type(jobCreateRequest.getType())
-                .salaryMin(jobCreateRequest.getSalaryMin())
-                .salaryMax(jobCreateRequest.getSalaryMax())
+                .category(jobInfoRequest.getCategory())
+                .type(jobInfoRequest.getType())
+                .salaryMin(jobInfoRequest.getSalaryMin())
+                .salaryMax(jobInfoRequest.getSalaryMax())
                 .build();
 
         jobRepository.save(job);
 
-        return JobCreateResponse.builder()
+        return JobInfoResponse.builder()
                 .jobId(job.getJobId())
                 .title(job.getTitle())
                 .description(job.getDescription())
@@ -82,5 +81,76 @@ public class JobServiceImpl implements JobService {
     @Override
     public PageResponse<?> getAllJobsStatus(int pageNo, int pageSize, String keyword, String location, String category, Type type, BigDecimal minSalary, BigDecimal maxSalary) {
         return null;
+    }
+
+    @Override
+    public JobInfoResponse getJob(String jobId) {
+
+        var job = jobRepository.findByJobId(jobId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        
+        return JobInfoResponse.builder()
+                .jobId(job.getJobId())
+                .title(job.getTitle())
+                .description(job.getDescription())
+                .location(job.getLocation())
+                .category(job.getCategory())
+                .type(job.getType())
+                .companyName(job.getCompany().getName())
+                .userId(job.getCompany().getUserId())
+                .salaryMin(job.getSalaryMin())
+                .salaryMax(job.getSalaryMax())
+                .build();
+    }
+
+    @Override
+    public void deleteJob(String jobId) {
+        jobRepository.deleteById(jobId);
+    }
+
+    @Override
+    public JobInfoResponse updateJob(String jobId, JobInfoRequest jobInfoRequest) {
+
+        var job = jobRepository.findByJobId(jobId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if(jobInfoRequest.getTitle() != null) {
+            job.setTitle(jobInfoRequest.getTitle());
+        }
+
+        if(jobInfoRequest.getDescription() != null) {
+            job.setDescription(jobInfoRequest.getDescription());
+        }
+
+        if(jobInfoRequest.getLocation() != null) {
+            job.setLocation(jobInfoRequest.getLocation());
+        }
+
+        if(jobInfoRequest.getCategory() != null) {
+            job.setCategory(jobInfoRequest.getCategory());
+        }
+
+        if(jobInfoRequest.getType() != null) {
+            job.setType(jobInfoRequest.getType());
+        }
+
+        if(jobInfoRequest.getSalaryMin() != null) {
+            job.setSalaryMin(jobInfoRequest.getSalaryMin());
+        }
+
+        if(jobInfoRequest.getSalaryMax() != null) {
+            job.setSalaryMax(jobInfoRequest.getSalaryMax());
+        }
+
+        jobRepository.save(job);
+
+        return JobInfoResponse.builder()
+                .jobId(job.getJobId())
+                .title(job.getTitle())
+                .description(job.getDescription())
+                .location(job.getLocation())
+                .category(job.getCategory())
+                .type(job.getType())
+                .salaryMin(job.getSalaryMin())
+                .salaryMax(job.getSalaryMax())
+                .build();
     }
 }

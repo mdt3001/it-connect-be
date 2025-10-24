@@ -2,7 +2,7 @@ package com.webit.webit.repository.SearchRepository;
 
 
 import com.webit.webit.dto.response.PageResponse;
-import com.webit.webit.dto.response.job.JobCreateResponse;
+import com.webit.webit.dto.response.job.JobInfoResponse;
 import com.webit.webit.model.Job;
 import com.webit.webit.util.Type;
 import lombok.RequiredArgsConstructor;
@@ -89,9 +89,9 @@ public class SearchAllJobRepository {
 
         List<Job> tempJobs = (List<Job>) page.stream().toList();
 
-        List<JobCreateResponse> response = new ArrayList<JobCreateResponse>();
+        List<JobInfoResponse> response = new ArrayList<JobInfoResponse>();
 
-        tempJobs.forEach(tempJob -> response.add(JobCreateResponse.builder()
+        tempJobs.forEach(tempJob -> response.add(JobInfoResponse.builder()
                         .jobId(tempJob.getJobId())
                         .title(tempJob.getTitle())
                         .description(tempJob.getDescription())

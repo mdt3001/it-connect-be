@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class JobCreateRequest {
+public class JobInfoRequest {
 
     private String title;
 

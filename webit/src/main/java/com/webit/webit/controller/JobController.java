@@ -1,17 +1,17 @@
 package com.webit.webit.controller;
 
 
-import com.webit.webit.dto.request.job.JobCreateRequest;
+import com.webit.webit.dto.request.job.JobInfoRequest;
 import com.webit.webit.dto.response.ApiResponse;
 import com.webit.webit.dto.response.PageResponse;
-import com.webit.webit.dto.response.job.JobCreateResponse;
+import com.webit.webit.dto.response.job.JobInfoResponse;
+import com.webit.webit.repository.JobRepository;
 import com.webit.webit.service.JobService;
 import com.webit.webit.util.Type;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/jobs")
@@ -19,12 +19,13 @@ import java.util.List;
 public class JobController {
 
     private final JobService jobService;
+    private final JobRepository jobRepository;
 
     @PostMapping("/")
-    public ApiResponse<JobCreateResponse> createJob(@RequestBody JobCreateRequest jobCreateRequest) {
+    public ApiResponse<JobInfoResponse> createJob(@RequestBody JobInfoRequest jobInfoRequest) {
 
-        return ApiResponse.<JobCreateResponse>builder()
-                .result(jobService.createJob(jobCreateRequest))
+        return ApiResponse.<JobInfoResponse>builder()
+                .result(jobService.createJob(jobInfoRequest))
                 .build();
     }
 
@@ -58,6 +59,24 @@ public class JobController {
                 .build();
     }
 
+    @GetMapping("/{jobId}")
+    public ApiResponse<JobInfoResponse> getJob(@PathVariable String jobId) {
+        return ApiResponse.<JobInfoResponse>builder()
+                .message("Get Job")
+                .result(jobService.getJob(jobId))
+                .build();
+    }
 
+    @DeleteMapping("/{jobId}")
+    public ApiResponse<String> deleteJob(@PathVariable String jobId) {
+        jobRepository.deleteById(jobId);
+        return ApiResponse.<String>builder().result("Job has been deleted").build();
+    }
 
+    @PutMapping("/{jobId}")
+    public ApiResponse<JobInfoResponse> updateJob(@PathVariable String jobId, @RequestBody JobInfoRequest jobInfoRequest) {
+        return ApiResponse.<JobInfoResponse>builder()
+                .result(jobService.updateJob(jobId, jobInfoRequest))
+                .build();
+    }
 }
