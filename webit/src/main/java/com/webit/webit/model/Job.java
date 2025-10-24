@@ -36,4 +36,6 @@ public class Job extends AbstractClass {
 
     private BigDecimal salaryMax;
 
+    private boolean isClose = false;
+
 }

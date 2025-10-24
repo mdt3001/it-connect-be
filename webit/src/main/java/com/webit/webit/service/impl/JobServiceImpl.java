@@ -19,6 +19,9 @@ import com.webit.webit.service.JobService;
 import com.webit.webit.util.Type;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -218,6 +221,40 @@ public class JobServiceImpl implements JobService {
                 .type(job.getType())
                 .salaryMin(job.getSalaryMin())
                 .salaryMax(job.getSalaryMax())
+                .build();
+    }
+    @Override
+    public PageResponse<?> getJobsEmployer(int pageNo, int pageSize) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt jwt)) {
+            throw new RuntimeException("Người dùng chưa được xác thực");
+        }
+
+        String userId = jwt.getSubject();
+
+        Pageable pageable =  PageRequest.of(pageNo, pageSize);
+
+        Page<Job> page = jobRepository.findAllByCompany_UserId(userId, pageable);
+
+        List<JobInfoResponse> response = page.getContent().stream().map(job -> JobInfoResponse.builder()
+                .jobId(job.getJobId())
+                .title(job.getTitle())
+                .description(job.getDescription())
+                .location(job.getLocation())
+                .category(job.getCategory())
+                .type(job.getType())
+                .companyName(job.getCompany().getName())
+                .userId(job.getCompany().getUserId())
+                .salaryMin(job.getSalaryMin())
+                .salaryMax(job.getSalaryMax())
+                .build()).toList();
+
+        return PageResponse.builder()
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .items(response)
+                .totalPage(page.getTotalPages())
                 .build();
     }
 }

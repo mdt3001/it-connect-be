@@ -12,6 +12,7 @@ import com.webit.webit.service.JobService;
 import com.webit.webit.service.SavedJobService;
 import com.webit.webit.util.Type;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -101,6 +102,15 @@ public class JobController {
 
         return ApiResponse.<String>builder()
                 .result("Đã nộp đơn")
+                .build();
+    }
+
+    @GetMapping("get-jobs-employer")
+    public ApiResponse<PageResponse<?>> getJobsEmployer(@RequestParam int pageNo,
+                                                        @RequestParam int pageSize
+                                                       ) {
+        return ApiResponse.<PageResponse<?>>builder()
+                .result(jobService.getJobsEmployer(pageNo, pageSize))
                 .build();
     }
 }

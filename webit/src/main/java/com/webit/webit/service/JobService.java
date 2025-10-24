@@ -22,4 +22,6 @@ public interface JobService {
     void deleteJob(String jobId);
 
     JobInfoResponse updateJob(String jobId, JobInfoRequest jobInfoRequest);
+
+    PageResponse<?> getJobsEmployer(int pageNo, int pageSize);
 }
