@@ -9,10 +9,15 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface JobRepository extends MongoRepository<Job, String> {
     Page<Job> findAllByCompany_UserId(String userId, Pageable pageable);
+
     Optional<Job> findByJobId(String jobId);
+
+    List<Job> findByJobIdIn(List<String> jobIds);
+
 }
