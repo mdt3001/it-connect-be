@@ -3,6 +3,7 @@ package com.webit.webit.service.impl;
 import com.webit.webit.dto.response.PageResponse;
 import com.webit.webit.dto.response.application.ApplicationResponse;
 import com.webit.webit.dto.response.application.ApplicationResponseById;
+import com.webit.webit.dto.response.application.ApplicationStatus;
 import com.webit.webit.dto.response.application.MyApplicationResponse;
 import com.webit.webit.exception.AppException;
 import com.webit.webit.exception.ErrorCode;
@@ -140,14 +141,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public String updateStatus(String applicationId, Status status) {
+    public Status updateStatus(String applicationId, ApplicationStatus status) {
         Application application = applicationRepository.findById(applicationId).orElseThrow(() -> new AppException(ErrorCode.NOTHING));
 
-        application.setStatus(status);
+        application.setStatus(status.getStatus());
 
         applicationRepository.save(application);
 
-        return status.toString();
+        return application.getStatus();
     }
 
     @Override

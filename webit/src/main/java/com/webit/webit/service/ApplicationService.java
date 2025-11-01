@@ -3,6 +3,7 @@ package com.webit.webit.service;
 import com.webit.webit.dto.response.PageResponse;
 import com.webit.webit.dto.response.application.ApplicationResponse;
 import com.webit.webit.dto.response.application.ApplicationResponseById;
+import com.webit.webit.dto.response.application.ApplicationStatus;
 import com.webit.webit.dto.response.application.MyApplicationResponse;
 import com.webit.webit.util.Status;
 
@@ -17,5 +18,5 @@ public interface ApplicationService {
 
     ApplicationResponseById getApplication(String applicationId);
 
-    String updateStatus(String applicationId, Status status);
+    Status updateStatus(String applicationId, ApplicationStatus status);
 }

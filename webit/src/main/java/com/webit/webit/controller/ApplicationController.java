@@ -5,6 +5,7 @@ import com.webit.webit.dto.response.ApiResponse;
 import com.webit.webit.dto.response.PageResponse;
 import com.webit.webit.dto.response.application.ApplicationResponse;
 import com.webit.webit.dto.response.application.ApplicationResponseById;
+import com.webit.webit.dto.response.application.ApplicationStatus;
 import com.webit.webit.dto.response.application.MyApplicationResponse;
 import com.webit.webit.service.ApplicationService;
 import com.webit.webit.util.Status;
@@ -50,11 +51,10 @@ public class ApplicationController {
     }
 
     @PutMapping("/{applicationId}/status")
-    public ApiResponse<String> updateStatus(@RequestParam Status status, @PathVariable String applicationId) {
-        return ApiResponse.<String>builder()
-                .message("Application status updated")
+    public ApiResponse<Status> updateStatus(@RequestBody ApplicationStatus status, @PathVariable String applicationId) {
+        return ApiResponse.<Status>builder()
+                .message("Trạng thái xin việc đã được cập nhật")
                 .result(applicationService.updateStatus(applicationId, status))
                 .build();
     }
-
 }
