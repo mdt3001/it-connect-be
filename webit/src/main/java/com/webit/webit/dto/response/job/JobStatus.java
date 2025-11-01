@@ -20,6 +20,8 @@ public class JobStatus {
 
     private String description;
 
+    private String requirement;
+
     private String location;
 
     private String category;

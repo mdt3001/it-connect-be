@@ -50,7 +50,7 @@ public class ApplicationController {
     }
 
     @PutMapping("/{applicationId}/status")
-    public ApiResponse<String> updateStatus(@RequestBody Status status, @PathVariable String applicationId) {
+    public ApiResponse<String> updateStatus(@RequestParam Status status, @PathVariable String applicationId) {
         return ApiResponse.<String>builder()
                 .message("Application status updated")
                 .result(applicationService.updateStatus(applicationId, status))

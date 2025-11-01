@@ -51,6 +51,7 @@ public class JobController {
                 .build();
     }
 
+    // status: (saved, ...)
     @GetMapping("/getJobStatus")
     public ApiResponse<PageResponse<?>> getAllJobsStatus(@RequestParam int pageNo,
                                                    @RequestParam int pageSize,
@@ -85,6 +86,8 @@ public class JobController {
                 .result(jobService.updateJob(jobId, jobInfoRequest))
                 .build();
     }
+
+
     @PostMapping("/save-job")
     public ApiResponse<String> saveJob(@RequestParam String jobId) {
         savedJobService.saveJob(jobId);

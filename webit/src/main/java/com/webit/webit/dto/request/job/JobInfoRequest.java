@@ -19,6 +19,8 @@ public class JobInfoRequest {
 
     private String description;
 
+    private String requirement;
+
     private String location;
 
     private String category;
@@ -28,7 +30,5 @@ public class JobInfoRequest {
     private BigDecimal salaryMin;
 
     private BigDecimal salaryMax;
-
-
 
 }

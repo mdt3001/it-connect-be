@@ -97,6 +97,7 @@ public class SearchAllJobRepository {
                         .jobId(tempJob.getJobId())
                         .title(tempJob.getTitle())
                         .description(tempJob.getDescription())
+                        .requirement(tempJob.getRequirement())
                         .location(tempJob.getLocation())
                         .category(tempJob.getCategory())
                         .type(tempJob.getType())

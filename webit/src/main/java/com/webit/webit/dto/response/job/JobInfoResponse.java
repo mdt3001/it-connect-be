@@ -21,6 +21,8 @@ public class JobInfoResponse {
 
     private String description;
 
+    private String requirement;
+
     private String location;
 
     private String category;

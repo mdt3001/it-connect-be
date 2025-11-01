@@ -64,6 +64,7 @@ public class JobServiceImpl implements JobService {
         Job job = Job.builder()
                 .title(jobInfoRequest.getTitle())
                 .description(jobInfoRequest.getDescription())
+                .requirement(jobInfoRequest.getRequirement())
                 .location(jobInfoRequest.getLocation())
                 .company(user)
                 .category(jobInfoRequest.getCategory())
@@ -78,6 +79,7 @@ public class JobServiceImpl implements JobService {
                 .jobId(job.getJobId())
                 .title(job.getTitle())
                 .description(job.getDescription())
+                .requirement(job.getRequirement())
                 .location(job.getLocation())
                 .category(job.getCategory())
                 .type(job.getType())
@@ -133,6 +135,7 @@ public class JobServiceImpl implements JobService {
                         .jobId(allJob.getJobId())
                         .title(allJob.getTitle())
                         .description(allJob.getDescription())
+                        .requirement(allJob.getRequirement())
                         .location(allJob.getLocation())
                         .category(allJob.getCategory())
                         .type(allJob.getType())
@@ -162,6 +165,7 @@ public class JobServiceImpl implements JobService {
                 .jobId(job.getJobId())
                 .title(job.getTitle())
                 .description(job.getDescription())
+                .requirement(job.getRequirement())
                 .location(job.getLocation())
                 .category(job.getCategory())
                 .type(job.getType())
@@ -190,6 +194,10 @@ public class JobServiceImpl implements JobService {
             job.setDescription(jobInfoRequest.getDescription());
         }
 
+        if (jobInfoRequest.getRequirement() != null) {
+            job.setRequirement(jobInfoRequest.getRequirement());
+        }
+
         if(jobInfoRequest.getLocation() != null) {
             job.setLocation(jobInfoRequest.getLocation());
         }
@@ -216,6 +224,7 @@ public class JobServiceImpl implements JobService {
                 .jobId(job.getJobId())
                 .title(job.getTitle())
                 .description(job.getDescription())
+                .requirement(job.getRequirement())
                 .location(job.getLocation())
                 .category(job.getCategory())
                 .type(job.getType())
@@ -223,6 +232,7 @@ public class JobServiceImpl implements JobService {
                 .salaryMax(job.getSalaryMax())
                 .build();
     }
+
     @Override
     public PageResponse<?> getJobsEmployer(int pageNo, int pageSize) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -241,6 +251,7 @@ public class JobServiceImpl implements JobService {
                 .jobId(job.getJobId())
                 .title(job.getTitle())
                 .description(job.getDescription())
+                .requirement(job.getRequirement())
                 .location(job.getLocation())
                 .category(job.getCategory())
                 .type(job.getType())
