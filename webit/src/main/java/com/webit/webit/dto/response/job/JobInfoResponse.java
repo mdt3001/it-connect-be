@@ -39,4 +39,6 @@ public class JobInfoResponse {
 
     private boolean isClosed;
 
+    private long applicationCount;
+
 }

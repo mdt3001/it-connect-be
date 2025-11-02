@@ -2,6 +2,7 @@ package com.webit.webit.service.impl;
 
 
 import com.webit.webit.dto.request.job.JobInfoRequest;
+import com.webit.webit.dto.response.application.ApplicationCount;
 import com.webit.webit.dto.response.job.JobStatus;
 import com.webit.webit.dto.response.PageResponse;
 import com.webit.webit.dto.response.job.JobInfoResponse;
@@ -247,6 +248,13 @@ public class JobServiceImpl implements JobService {
 
         Page<Job> page = jobRepository.findAllByCompany_UserId(userId, pageable);
 
+        List<String> jobIds = page.getContent().stream()
+                .map(Job::getJobId)
+                .toList();
+
+        Map<String, Long> applicationCounts = applicationRepository.countApplicationsByJobIds(jobIds).stream()
+                .collect(Collectors.toMap(ApplicationCount::getJobId, ApplicationCount::getCount));
+
         List<JobInfoResponse> response = page.getContent().stream().map(job -> JobInfoResponse.builder()
                 .jobId(job.getJobId())
                 .title(job.getTitle())
@@ -259,6 +267,7 @@ public class JobServiceImpl implements JobService {
                 .userId(job.getCompany().getUserId())
                 .salaryMin(job.getSalaryMin())
                 .salaryMax(job.getSalaryMax())
+                .applicationCount(applicationCounts.getOrDefault(job.getJobId(),0L))
                 .build()).toList();
 
         return PageResponse.builder()

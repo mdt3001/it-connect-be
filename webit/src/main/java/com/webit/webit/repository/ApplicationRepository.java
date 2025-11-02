@@ -1,12 +1,10 @@
 package com.webit.webit.repository;
 
-import com.webit.webit.dto.response.application.ApplicationResponseById;
-import com.webit.webit.dto.response.application.MyApplicationResponse;
+import com.webit.webit.dto.response.application.ApplicationCount;
 import com.webit.webit.model.Application;
-import com.webit.webit.model.Job;
-import com.webit.webit.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +15,7 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
     List<Application> findAllByApplicant(String userId);
 
     Page<Application> findAllByJob(String jobId, Pageable pageable);
+
+    @Aggregation(pipeline = { "{ $match: { job: { $in: ?0 } } }", "{ $group: { _id: '$job', count: { $sum: 1 } } }" })
+    List<ApplicationCount> countApplicationsByJobIds(List<String> jobIds);
 }

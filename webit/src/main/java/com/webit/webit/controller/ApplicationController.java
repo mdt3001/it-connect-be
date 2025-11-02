@@ -35,7 +35,6 @@ public class ApplicationController {
                 .build();
     }
 
-
     @GetMapping("/{applicationId}")
     public ApiResponse<ApplicationResponseById> getApplicationById(@PathVariable String applicationId) {
         return ApiResponse.<ApplicationResponseById>builder()
