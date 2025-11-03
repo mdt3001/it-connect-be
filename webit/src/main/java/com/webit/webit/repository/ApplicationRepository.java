@@ -18,4 +18,6 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
 
     @Aggregation(pipeline = { "{ $match: { job: { $in: ?0 } } }", "{ $group: { _id: '$job', count: { $sum: 1 } } }" })
     List<ApplicationCount> countApplicationsByJobIds(List<String> jobIds);
+
+    long countByJob(String jobId);
 }

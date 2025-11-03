@@ -7,6 +7,7 @@ import com.webit.webit.model.Job;
 import com.webit.webit.util.Type;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +24,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 @Getter
+@Slf4j
 public class SearchAllJobRepository {
 
     private final MongoTemplate mongoTemplate;
@@ -105,6 +107,7 @@ public class SearchAllJobRepository {
                         .userId(tempJob.getCompany().getUserId())
                         .salaryMin(tempJob.getSalaryMin())
                         .salaryMax(tempJob.getSalaryMax())
+                        .isClosed(tempJob.isClosed())
                 .build()));
 
         return PageResponse.builder()

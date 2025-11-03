@@ -162,6 +162,8 @@ public class JobServiceImpl implements JobService {
 
         var job = jobRepository.findByJobId(jobId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        long applicationCount = applicationRepository.countByJob(jobId);
+
         return JobInfoResponse.builder()
                 .jobId(job.getJobId())
                 .title(job.getTitle())
@@ -174,6 +176,8 @@ public class JobServiceImpl implements JobService {
                 .userId(job.getCompany().getUserId())
                 .salaryMin(job.getSalaryMin())
                 .salaryMax(job.getSalaryMax())
+                .applicationCount(applicationCount)
+                .isClosed(job.isClosed())
                 .build();
     }
 
@@ -267,6 +271,7 @@ public class JobServiceImpl implements JobService {
                 .userId(job.getCompany().getUserId())
                 .salaryMin(job.getSalaryMin())
                 .salaryMax(job.getSalaryMax())
+                .isClosed(job.isClosed())
                 .applicationCount(applicationCounts.getOrDefault(job.getJobId(),0L))
                 .build()).toList();
 
