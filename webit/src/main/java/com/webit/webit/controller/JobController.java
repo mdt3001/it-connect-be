@@ -26,7 +26,6 @@ public class JobController {
 
     private final JobRepository jobRepository;
 
-    private final SavedJobService savedJobService;
 
     @PostMapping("/")
     public ApiResponse<JobInfoResponse> createJob(@RequestBody JobInfoRequest jobInfoRequest) {
@@ -87,15 +86,6 @@ public class JobController {
                 .build();
     }
 
-
-    @PostMapping("/save-job")
-    public ApiResponse<String> saveJob(@RequestParam String jobId) {
-        savedJobService.saveJob(jobId);
-
-        return ApiResponse.<String>builder()
-                .result("Đã lưu")
-                .build();
-    }
 
     @GetMapping("get-jobs-employer")
     public ApiResponse<PageResponse<?>> getJobsEmployer(@RequestParam int pageNo,

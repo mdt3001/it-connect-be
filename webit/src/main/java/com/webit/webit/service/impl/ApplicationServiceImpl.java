@@ -124,8 +124,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         User user = userRepository.findByUserId(application.getApplicant()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-
-
         return ApplicationResponseById.builder()
                 .applicationId(application.getApplicationId())
                 .job(job.getJobId())
