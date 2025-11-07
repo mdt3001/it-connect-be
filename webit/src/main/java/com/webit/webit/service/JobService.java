@@ -23,7 +23,7 @@ public interface JobService {
 
     JobInfoResponse updateJob(String jobId, JobInfoRequest jobInfoRequest);
 
-    PageResponse<?> getJobsEmployer(int pageNo, int pageSize);
+    PageResponse<?> getJobsEmployer(int pageNo, int pageSize, String search, String status, String sortField, String sortDirection);
 
     void toogleClose(String jobId);
 }

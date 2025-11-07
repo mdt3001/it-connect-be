@@ -88,11 +88,15 @@ public class JobController {
 
 
     @GetMapping("get-jobs-employer")
-    public ApiResponse<PageResponse<?>> getJobsEmployer(@RequestParam int pageNo,
-                                                        @RequestParam int pageSize
-                                                       ) {
+    public ApiResponse<PageResponse<?>> getJobsEmployer(
+            @RequestParam(defaultValue = "0") int pageNo,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false, defaultValue = "All") String status,
+            @RequestParam(required = false, defaultValue = "title") String sortField,
+            @RequestParam(required = false, defaultValue = "asc") String sortDirection) {
         return ApiResponse.<PageResponse<?>>builder()
-                .result(jobService.getJobsEmployer(pageNo, pageSize))
+                .result(jobService.getJobsEmployer(pageNo, pageSize, search, status, sortField, sortDirection))
                 .build();
     }
 
