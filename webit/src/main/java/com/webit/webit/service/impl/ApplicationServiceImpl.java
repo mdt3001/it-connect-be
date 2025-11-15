@@ -55,6 +55,10 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         String userId = jwt.getSubject();
 
+        if (applicationRepository.existsByApplicantAndJob(userId, jobId)) {
+            throw new AppException(ErrorCode.APPLICATION_EXISTED);
+        }
+
         Application application = Application.builder()
                 .applicant(userId)
                 .job(jobId)
@@ -132,6 +136,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .nameApplicant(user.getName())
                 .email(user.getEmail())
                 .avatar(user.getAvatar())
+                .resume(user.getResume())
                 .status(application.getStatus())
                 .createdAt(application.getCreatedAt())
                 .updatedAt(application.getUpdatedAt())
@@ -181,6 +186,7 @@ public class ApplicationServiceImpl implements ApplicationService {
                             .nameApplicant(user.getName())
                             .email(user.getEmail())
                             .avatar(user.getAvatar())
+                            .resume(user.getResume())
                             .status(applicant.getStatus())
                             .createdAt(applicant.getCreatedAt())
                             .updatedAt(applicant.getUpdatedAt())

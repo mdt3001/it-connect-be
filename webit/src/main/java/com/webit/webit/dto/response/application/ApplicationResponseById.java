@@ -30,6 +30,8 @@ public class ApplicationResponseById {
 
     private String avatar;
 
+    private String resume;
+
     private Status status;
 
     private LocalDateTime createdAt;

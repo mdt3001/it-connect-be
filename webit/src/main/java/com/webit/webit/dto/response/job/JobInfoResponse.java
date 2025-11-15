@@ -1,11 +1,9 @@
 package com.webit.webit.dto.response.job;
 
 
+import com.webit.webit.util.Status;
 import com.webit.webit.util.Type;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -13,6 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Setter
 public class JobInfoResponse {
 
     private String jobId;
@@ -38,6 +37,8 @@ public class JobInfoResponse {
     private BigDecimal salaryMax;
 
     private boolean isClosed;
+
+    private Status status;
 
     private long applicationCount;
 

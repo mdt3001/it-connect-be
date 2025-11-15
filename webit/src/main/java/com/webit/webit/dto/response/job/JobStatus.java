@@ -1,5 +1,6 @@
 package com.webit.webit.dto.response.job;
 
+import com.webit.webit.util.Status;
 import com.webit.webit.util.Type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,9 +37,13 @@ public class JobStatus {
 
     private BigDecimal salaryMax;
 
+    private long applicationCount;
+
     private boolean isSaved;
 
     private boolean isApplied;
+
+    private Status status;
 
     private boolean isClosed;
 

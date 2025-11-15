@@ -18,6 +18,7 @@ import com.webit.webit.repository.SavedJobRepository;
 import com.webit.webit.repository.SearchRepository.SearchAllJobRepository;
 import com.webit.webit.repository.UserRepository;
 import com.webit.webit.service.JobService;
+import com.webit.webit.util.Status;
 import com.webit.webit.util.Type;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -95,7 +97,25 @@ public class JobServiceImpl implements JobService {
     @Override
     public PageResponse<?> getAllJobs(int pageNo, int pageSize, String keyword, String location, String category, Type type, BigDecimal minSalary, BigDecimal maxSalary) {
 
-        return searchAllJobRepository.getAllJobs(pageNo, pageSize, keyword, location, category, type, minSalary, maxSalary);
+        var allJobs = searchAllJobRepository.getAllJobs(pageNo, pageSize, keyword, location, category, type, minSalary, maxSalary);
+
+        List<JobInfoResponse> jobs = (List<JobInfoResponse>) allJobs.getItems();
+
+        List<String> jobIds = jobs.stream().map(JobInfoResponse::getJobId).toList();
+
+        Map<String, Long> applicationCounts = applicationRepository.countApplicationsByJobIds(jobIds).stream().collect(Collectors.toMap(ApplicationCount::getJobId, ApplicationCount::getCount));
+
+        jobs.forEach(jobInfoResponse -> {
+            long count = applicationCounts.getOrDefault(jobInfoResponse.getJobId(), 0L);
+            jobInfoResponse.setApplicationCount(count);
+        });
+
+        return PageResponse.builder()
+                .pageNo(pageNo)
+                .pageSize(pageSize)
+                .totalPage(allJobs.getTotalPage())
+                .items(jobs)
+                .build();
     }
 
     @Override
@@ -115,6 +135,10 @@ public class JobServiceImpl implements JobService {
 
         List<JobInfoResponse> allJobs = (List<JobInfoResponse>) jobPage.getItems();
 
+        List<String> jobIds = allJobs.stream().map(JobInfoResponse::getJobId).toList();
+
+        Map<String, Long> applicationCounts = applicationRepository.countApplicationsByJobIds(jobIds).stream().collect(Collectors.toMap(ApplicationCount::getJobId, ApplicationCount::getCount));
+
         List<SavedJob> savedJobsByUserId =  savedJobRepository.findAllByJobseeker(userId);
 
         List<Application> applyJobsByUserId = applicationRepository.findAllByApplicant(userId);
@@ -124,15 +148,17 @@ public class JobServiceImpl implements JobService {
                         s -> s.getJob(),        // key
                         s -> s.getJobseeker()  // value
                 ));
-        Map<String, String> applyjobMap = applyJobsByUserId.stream()
+
+        Map<String, Status> applyjobMap = applyJobsByUserId.stream()
                 .collect(Collectors.toMap(
                         s -> s.getJob(),        // key
-                        s -> s.getApplicant()  // value
+                        s -> s.getStatus()  // value
                 ));
 
         allJobs.forEach(allJob -> {
             boolean saved = savejobMap.containsKey(allJob.getJobId());
             boolean applied = applyjobMap.containsKey(allJob.getJobId());
+            long count = applicationCounts.getOrDefault(allJob.getJobId(), 0L);
                 jobStatus.add(JobStatus.builder()
                         .jobId(allJob.getJobId())
                         .title(allJob.getTitle())
@@ -145,7 +171,9 @@ public class JobServiceImpl implements JobService {
                         .userId(allJob.getUserId())
                         .salaryMin(allJob.getSalaryMin())
                         .salaryMax(allJob.getSalaryMax())
+                        .applicationCount(count)
                         .isSaved(saved)
+                        .status(applyjobMap.get(allJob.getJobId()))
                         .isApplied(applied)
                         .build());
         });
@@ -161,9 +189,19 @@ public class JobServiceImpl implements JobService {
     @Override
     public JobInfoResponse getJob(String jobId) {
 
-        var job = jobRepository.findByJobId(jobId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof Jwt jwt)) {
+            throw new RuntimeException("Người dùng chưa được xác thực");
+        }
+
+        String userId = jwt.getSubject();
+
+        var job = jobRepository.findByJobId(jobId).orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_EXISTED));
 
         long applicationCount = applicationRepository.countByJob(jobId);
+
+        var applicationStatus = applicationRepository.findByJobAndApplicant(jobId, userId).map(Application::getStatus).orElse(null);
 
         return JobInfoResponse.builder()
                 .jobId(job.getJobId())
@@ -178,6 +216,7 @@ public class JobServiceImpl implements JobService {
                 .salaryMin(job.getSalaryMin())
                 .salaryMax(job.getSalaryMax())
                 .applicationCount(applicationCount)
+                .status(applicationStatus)
                 .isClosed(job.isClosed())
                 .build();
     }

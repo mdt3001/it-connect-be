@@ -16,7 +16,8 @@ public enum ErrorCode {
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     UNSAVED(1009, "Lưu không thành công", HttpStatus.BAD_REQUEST),
     NOTHING(1010, "RỖNG", HttpStatus.BAD_REQUEST),
-    SAVE_JOB_EXISTED(1011, "Bạn đã lưu công việc này", HttpStatus.BAD_REQUEST)
+    SAVE_JOB_EXISTED(1011, "Bạn đã lưu công việc này", HttpStatus.BAD_REQUEST),
+    APPLICATION_EXISTED(1012, "Bạn đã nộp công việc này", HttpStatus.BAD_REQUEST)
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

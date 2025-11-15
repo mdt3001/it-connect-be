@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ApplicationRepository extends MongoRepository<Application, String> {
@@ -34,4 +35,7 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
 
     List<Application> findTop5ByJobInOrderByCreatedAtDesc(List<String> jobIds);
 
+    boolean existsByApplicantAndJob(String userId, String jobId);
+
+    Optional<Application> findByJobAndApplicant(String jobId, String userId);
 }
