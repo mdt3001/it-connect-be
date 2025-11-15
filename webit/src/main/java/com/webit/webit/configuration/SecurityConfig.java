@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -32,16 +33,19 @@ public class SecurityConfig {
     @Value("${jwt.signerKey}")
     private String signerKey;
 
+    @Value("${app.allowed-origins:http://localhost:5173,https://it-connect-fe.vercel.app}")
+    private String allowedOrigins;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                //  Cách mới thay cho .cors().and()
-                .cors(Customizer.withDefaults())
-
                 // Tắt CSRF vì là REST API
                 .csrf(AbstractHttpConfigurer::disable)
+                
+                // Cấu hình CORS - phải đặt trước authorizeHttpRequests
+                .cors(Customizer.withDefaults())
 
-                //  Cho phép OPTIONS (preflight request)
+                //  Cho phép OPTIONS (preflight request) - phải đặt đầu tiên
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
@@ -70,10 +74,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // FE domain
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH" , "DELETE", "OPTIONS"));
+        // Parse allowedOrigins từ string thành List và trim spaces
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
+        configuration.setAllowedOrigins(origins);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L); // Cache preflight response trong 1 giờ
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

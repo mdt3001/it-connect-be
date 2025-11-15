@@ -26,6 +26,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import com.webit.webit.service.CloudinaryService;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +46,7 @@ import java.util.UUID;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
-
+    private final CloudinaryService cloudinaryService;
     private final UserMapper userMapper;
 
     @NonFinal
@@ -86,29 +87,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public ImageResponse uploadImage(MultipartFile file) {
         try {
-            //  Thư mục lưu file
-            String uploadDir = "uploads/";
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
+            // Upload lên Cloudinary
+            String imageUrl = cloudinaryService.uploadImage(file);
 
-            //  Tên file duy nhất
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get(uploadDir, fileName);
-
-            //  Lưu file
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            //  Tạo URL truy cập file (localhost có thể thay bằng domain thật)
-            String imageUrl = "http://localhost:9090/uploads/" + fileName;
-
-            //  Trả response
+            // Trả response với URL từ Cloudinary
             return ImageResponse.builder()
                     .imageUrl(imageUrl)
                     .build();
 
         } catch (IOException e) {
+            log.error("Tải ảnh thất bại: {}", e.getMessage());
             throw new RuntimeException("Tải ảnh thất bại: " + e.getMessage());
         }
     }
