@@ -27,7 +27,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/api/user", "/api/auth/login", "/api/auth/introspect", "/api/auth/register", "/api/auth/upload-image"
+            "/api/user", "/api/auth/login", "/api/auth/introspect", "/api/auth/register", "/api/auth/upload-image", "/api/auth/password-reset/**"
     };
 
     @Value("${jwt.signerKey}")
