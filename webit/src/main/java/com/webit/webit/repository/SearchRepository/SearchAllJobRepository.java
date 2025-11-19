@@ -104,6 +104,7 @@ public class SearchAllJobRepository {
                         .category(tempJob.getCategory())
                         .type(tempJob.getType())
                         .companyName(tempJob.getCompany().getName())
+                        .companyLogo(tempJob.getCompany().getCompanyLogo())
                         .userId(tempJob.getCompany().getUserId())
                         .salaryMin(tempJob.getSalaryMin())
                         .salaryMax(tempJob.getSalaryMax())

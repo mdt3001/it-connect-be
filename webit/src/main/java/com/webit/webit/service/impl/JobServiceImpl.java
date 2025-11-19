@@ -168,6 +168,7 @@ public class JobServiceImpl implements JobService {
                         .category(allJob.getCategory())
                         .type(allJob.getType())
                         .companyName(allJob.getCompanyName())
+                        .companyLogo(allJob.getCompanyLogo())
                         .userId(allJob.getUserId())
                         .salaryMin(allJob.getSalaryMin())
                         .salaryMax(allJob.getSalaryMax())

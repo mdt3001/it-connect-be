@@ -30,6 +30,8 @@ public class JobInfoResponse {
 
     private String companyName;
 
+    private String companyLogo;
+
     private String userId;
 
     private BigDecimal salaryMin;
