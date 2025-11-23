@@ -38,4 +38,6 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
     boolean existsByApplicantAndJob(String userId, String jobId);
 
     Optional<Application> findByJobAndApplicant(String jobId, String userId);
+
+    List<Application> findByApplicantAndJobIn(String userId, List<String> jobIds);
 }

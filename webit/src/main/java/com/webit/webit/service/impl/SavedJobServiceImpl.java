@@ -2,14 +2,20 @@ package com.webit.webit.service.impl;
 
 import com.webit.webit.dto.response.PageResponse;
 import com.webit.webit.dto.response.SaveJob.SaveJobResponse;
+import com.webit.webit.dto.response.application.ApplicationCount;
+import com.webit.webit.dto.response.job.JobInfoResponse;
+import com.webit.webit.dto.response.job.JobStatus;
 import com.webit.webit.exception.AppException;
 import com.webit.webit.exception.ErrorCode;
+import com.webit.webit.model.Application;
 import com.webit.webit.model.Job;
 import com.webit.webit.model.SavedJob;
+import com.webit.webit.repository.ApplicationRepository;
 import com.webit.webit.repository.JobRepository;
 import com.webit.webit.repository.SavedJobRepository;
 import com.webit.webit.repository.UserRepository;
 import com.webit.webit.service.SavedJobService;
+import com.webit.webit.util.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +26,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,6 +39,8 @@ public class SavedJobServiceImpl implements SavedJobService {
     private final SavedJobRepository savedJobRepository;
 
     private final JobRepository jobRepository;
+
+    private final ApplicationRepository applicationRepository;
 
     @Override
     public SaveJobResponse saveJob(String jobId) {
@@ -103,11 +114,49 @@ public class SavedJobServiceImpl implements SavedJobService {
 
         List<Job> jobs = jobRepository.findByJobIdIn(jobIds);
 
+        List<Application> applications =  applicationRepository.findByApplicantAndJobIn(userId, jobIds);
+
+//        log.info("a: ", applications);
+
+        Map<String , Status> applicationStatus = applications.stream().collect(Collectors.toMap(Application::getJob,
+                Application::getStatus));
+
+        Map<String, Long> applicationCounts = applicationRepository.countApplicationsByJobIds(jobIds).stream().collect(Collectors.toMap(ApplicationCount::getJobId, ApplicationCount::getCount));
+
+        List<JobStatus> jobStatus = new ArrayList<>();
+
+        jobs.forEach(job -> {
+            Status status = applicationStatus.get(job.getJobId());
+
+            boolean applied = status != null;
+
+            long count = applicationCounts.getOrDefault(job.getJobId(), 0L);
+            jobStatus.add(JobStatus.builder()
+                            .jobId(job.getJobId())
+                            .title(job.getTitle())
+                            .description(job.getDescription())
+                            .requirement(job.getRequirement())
+                            .location(job.getLocation())
+                            .category(job.getCategory())
+                            .type(job.getType())
+                            .companyName(job.getCompany().getCompanyName())
+                            .companyLogo(job.getCompany().getCompanyLogo())
+                            .userId(job.getCompany().getUserId())
+                            .salaryMin(job.getSalaryMin())
+                            .salaryMax(job.getSalaryMax())
+                            .isClosed(job.isClosed())
+                            .status(status)
+                            .applicationCount(count)
+                            .isSaved(true)
+                            .isApplied(applied)
+                    .build());
+        });
+
         return PageResponse.builder()
                 .pageNo(pageNo)
                 .pageSize(pageSize)
                 .totalPage(page.getTotalPages())
-                .items(jobs)
+                .items(jobStatus)
                 .build();
     }
 }
