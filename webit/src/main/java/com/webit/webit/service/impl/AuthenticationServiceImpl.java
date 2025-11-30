@@ -8,10 +8,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.webit.webit.dto.request.AuthenticationRequest;
 import com.webit.webit.dto.request.IntrospectRequest;
 import com.webit.webit.dto.request.UserDTORequest;
-import com.webit.webit.dto.response.AuthenticationResponse;
-import com.webit.webit.dto.response.ImageResponse;
-import com.webit.webit.dto.response.IntrospectResponse;
-import com.webit.webit.dto.response.UserResponse;
+import com.webit.webit.dto.response.*;
 import com.webit.webit.exception.AppException;
 import com.webit.webit.exception.ErrorCode;
 import com.webit.webit.mapper.UserMapper;
@@ -177,6 +174,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return jwsObject.serialize();
         } catch (JOSEException e) {
             log.error("Cannot create token", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public CVResponse uploadCV(MultipartFile file) {
+        try {
+            String cvUrl = cloudinaryService.uploadCV(file);
+
+            return CVResponse.builder()
+                    .cvUrl(cvUrl)
+                    .build();
+        } catch (IOException e) {
+            log.error("Tải CV thất bại: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

@@ -5,10 +5,7 @@ import com.nimbusds.jose.JOSEException;
 import com.webit.webit.dto.request.AuthenticationRequest;
 import com.webit.webit.dto.request.IntrospectRequest;
 import com.webit.webit.dto.request.UserDTORequest;
-import com.webit.webit.dto.response.ApiResponse;
-import com.webit.webit.dto.response.ImageResponse;
-import com.webit.webit.dto.response.IntrospectResponse;
-import com.webit.webit.dto.response.UserResponse;
+import com.webit.webit.dto.response.*;
 import com.webit.webit.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,4 +53,11 @@ public class AuthenticationController {
                 .build();
     }
 
+    @PostMapping("/upload-cv")
+    public ApiResponse<CVResponse> uploadCV(@RequestParam MultipartFile file){
+        var response = authenticationService.uploadCV(file);
+        return ApiResponse.<CVResponse>builder()
+                .result(response)
+                .build();
+    }
 }

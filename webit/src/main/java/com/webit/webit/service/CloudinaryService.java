@@ -42,4 +42,20 @@ public class CloudinaryService {
             throw e;
         }
     }
+
+    public String uploadCV(MultipartFile file) throws IOException {
+        try {
+            Map uploadResult = cloudinary.uploader().upload(
+                    file.getBytes(),
+                    ObjectUtils.asMap(
+                            "resource_type", "raw",
+                            "folder", "it-connect/cv"
+                    )
+            );
+            return (String) uploadResult.get("secure_url");
+        } catch (IOException e) {
+            log.error("Error uploading image to Cloudinary: {}", e.getMessage());
+            throw e;
+        }
+    }
 }
